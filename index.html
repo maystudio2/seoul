@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공연 주간 공식 일정표</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (아이콘) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-12">
+
+    <!-- 상단 헤더 -->
+    <header class="bg-slate-900/90 border-b border-slate-800 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-md mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-rose-500 text-xl"><i class="fa-solid fa-calendar-check"></i></span>
+                <h1 class="text-lg font-extrabold tracking-tight">공연 주간 일정 가이드</h1>
+            </div>
+            <span class="text-[11px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded-full font-bold">
+                OFFICIAL
+            </span>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto w-full px-4 mt-4 flex flex-col gap-5">
+        
+        <!-- 핵심 알림판 -->
+        <div id="quickAlert" class="bg-rose-500/15 border-2 border-rose-500/30 rounded-2xl p-4 flex gap-3 items-start">
+            <span class="text-rose-400 text-lg mt-0.5"><i class="fa-solid fa-triangle-exclamation animate-bounce"></i></span>
+            <div class="space-y-1">
+                <h4 class="text-xs font-bold text-rose-300 uppercase tracking-wider">중요</h4>
+                <p id="alertText" class="text-sm font-semibold text-white leading-relaxed">
+                    6일 월요일은 12시 및 17시까지 극장에 반드시 도착하셔야 합니다! (시작 1시간 전 도착 규칙)
+                </p>
+            </div>
+        </div>
+
+        <!-- 탭 메뉴 (날짜 빠른 이동) -->
+        <div class="grid grid-cols-4 gap-1.5 p-1 bg-slate-950/80 border border-slate-800 rounded-xl">
+            <button onclick="selectDay('day5')" id="tab-day5" class="py-2.5 rounded-lg text-center font-bold text-xs transition duration-200 tab-btn">
+                5(일)<br><span class="text-[9px] font-normal opacity-70">셋업</span>
+            </button>
+            <button onclick="selectDay('day6')" id="tab-day6" class="py-2.5 rounded-lg text-center font-bold text-xs transition duration-200 tab-btn">
+                6(월)<br><span class="text-[9px] font-normal opacity-70">리허설</span>
+            </button>
+            <button onclick="selectDay('day7')" id="tab-day7" class="py-2.5 rounded-lg text-center font-bold text-xs transition duration-200 tab-btn">
+                7-10(화-금)<br><span class="text-[9px] font-normal opacity-70">평일공연</span>
+            </button>
+            <button onclick="selectDay('day11')" id="tab-day11" class="py-2.5 rounded-lg text-center font-bold text-xs transition duration-200 tab-btn">
+                11-12(토-일)<br><span class="text-[9px] font-normal opacity-70">주말공연</span>
+            </button>
+        </div>
+
+        <!-- 일자별 메인 일정 카드 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-6">
+            
+            <!-- 카드 헤더 -->
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                <div>
+                    <h2 id="dayTitle" class="text-lg font-bold text-white">6일 월요일</h2>
+                    <p id="daySubtitle" class="text-xs text-slate-400 mt-1">리허설 집중 진행의 날 (총 2회)</p>
+                </div>
+                <!-- 루트 비주얼 -->
+                <span id="routeBadge" class="text-[11px] bg-indigo-500/10 text-indigo-300 font-bold px-2.5 py-1 rounded-md border border-indigo-500/20">
+                    숙소(식사) ➡ 리허설 ➡ 숙소(식사)
+                </span>
+            </div>
+
+            <!-- 타임라인 리스트 -->
+            <div id="timelineList" class="space-y-3">
+                <!-- 자바스크립트로 일정이 동적으로 주입됩니다. -->
+            </div>
+
+        </div>
+
+        <!-- 하단: 일주일 전체 흐름 빠르게 훑어보기 -->
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 space-y-3">
+            <h3 class="text-xs font-bold text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
+                <i class="fa-solid fa-grip"></i> 주간 일정 요약 매트릭스
+            </h3>
+            
+            <div class="space-y-2">
+                <!-- 5일 -->
+                <div onclick="selectDay('day5')" class="flex items-center justify-between p-2.5 bg-slate-950/40 hover:bg-slate-950/90 rounded-xl border border-slate-800/60 cursor-pointer transition">
+                    <span class="text-xs font-bold text-slate-300">5일 (일)</span>
+                    <span class="text-xs text-slate-400 font-semibold">🛠️ 무대·조명·음향 셋업 & 동선 체크</span>
+                </div>
+                <!-- 6일 -->
+                <div onclick="selectDay('day6')" class="flex items-center justify-between p-2.5 bg-slate-950/40 hover:bg-slate-950/90 rounded-xl border border-slate-800/60 cursor-pointer transition">
+                    <span class="text-xs font-bold text-pink-400">6일 (월)</span>
+                    <span class="text-xs text-slate-300">🎬 13시, 18시 리허설 (Call: 12시/17시)</span>
+                </div>
+                <!-- 7~10일 -->
+                <div onclick="selectDay('day7')" class="flex items-center justify-between p-2.5 bg-slate-950/40 hover:bg-slate-950/90 rounded-xl border border-slate-800/60 cursor-pointer transition">
+                    <span class="text-xs font-bold text-emerald-400">7-10일(화-금)</span>
+                    <span class="text-xs text-slate-300">⭐️ 14시 리허설 (Call: 13시) ➡ 20시 본공연</span>
+                </div>
+                <!-- 11~12일 -->
+                <div onclick="selectDay('day11')" class="flex items-center justify-between p-2.5 bg-slate-950/40 hover:bg-slate-950/90 rounded-xl border border-slate-800/60 cursor-pointer transition">
+                    <span class="text-xs font-bold text-amber-400">11-12일(토-일)</span>
+                    <span class="text-xs text-slate-300">☀️ 12시 리허설 (Call: 11시) ➡ 16시 본공연</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 스크립트 제어 영역 -->
+    <script>
+        // 군더더기 설명(desc)을 완전히 제거한 핵심 매핑 데이터
+        const scheduleData = {
+            day5: {
+                title: "5일 일요일",
+                subtitle: "시스템 빌드 및 무대 동선 정리",
+                alert: "무대, 조명, 음향 셋업이 이루어지는 날입니다. 무대 등퇴장 동선 체크를 진행합니다.",
+                route: "시스템 셋업 & 동선 체크",
+                timeline: [
+                    { time: "상시 진행", title: "⚙️ 무대, 조명, 음향 셋업", type: "work" },
+                    { time: "상시 진행", title: "🚶 무대 동선 체크 (등퇴장로 등)", type: "important" }
+                ]
+            },
+            day6: {
+                title: "6일 월요일",
+                subtitle: "더블 리허설 진행 (13시 / 18시)",
+                alert: "리허설 시작 1시간 전에는 무조건 현장 도착 완료하셔야 합니다! (12시 / 17시 도착 엄수)",
+                route: "숙소(식사) ➡ 리허설 ➡ 숙소(식사)",
+                timeline: [
+                    { time: "11:00 - 11:50", title: "🍱 점심 식사", type: "meal" },
+                    { time: "11:50 - 12:00", title: "🚗 이동", type: "move" },
+                    { time: "12:00 - 13:00", title: "⚡ 리허설 준비 (Call Time)", type: "prep" },
+                    { time: "13:00 - 16:00", title: "🎭 1차 리허설", type: "rehearsal" },
+                    { time: "16:00 - 16:10", title: "🚗 숙소 이동", type: "move" },
+                    { time: "16:00 - 16:50", title: "🍱 저녁 식사", type: "meal" },
+                    { time: "17:00 - 18:00", title: "⚡ 리허설 준비 (Call Time)", type: "prep" },
+                    { time: "18:00 - 21:00", title: "🎭 2차 리허설", type: "rehearsal" }
+                ]
+            },
+            day7: {
+                title: "7일 화요일 ~ 10일 금요일",
+                subtitle: "주중 본 공연 타임테이블 (20시)",
+                alert: "14시 리허설 개시 1시간 전인 13시까지 반드시 도착을 엄수해주시기 바랍니다.",
+                route: "리허설 ➡ 숙소(식사) ➡ 본공연(20시)",
+                timeline: [
+                    { time: "11:00 - 12:00", title: "🍱 점심 식사", type: "meal" },
+                    { time: "12:50 - 13:00", title: "🚗 이동", type: "move" },
+                    { time: "13:00 - 14:00", title: "⚡ 리허설 준비 (Call Time)", type: "prep" },
+                    { time: "14:00 - 16:00", title: "🎭 리허설", type: "rehearsal" },
+                    { time: "16:00 - 16:10", title: "🚗 이동", type: "move" },
+                    { time: "16:10 - 18:20", title: "💤 휴식 및 저녁 식사 (17:00)", type: "meal" },
+                    { time: "18:20 - 18:30", title: "🚗 이동", type: "move" },
+                    { time: "18:30 - 19:30", title: "🔧 테크", type: "tech" },
+                    { time: "20:00 - 22:00", title: "⭐️ 공연", type: "live" }
+                ]
+            },
+            day11: {
+                title: "11일 토요일 ~ 12일 일요일",
+                subtitle: "주말 본 공연 타임테이블 (16시)",
+                alert: "주말은 이른 12시부터 리허설이 시작됩니다. 1시간 전인 11시까지 반드시 극장 도착 완료하셔야 합니다.",
+                route: "리허설 ➡ 본공연(16시) ➡ 종료식",
+                timeline: [
+                    { time: "11:00 - 12:00", title: "⚡ 리허설 준비 (Call Time)", type: "prep" },
+                    { time: "12:00 - 15:30", title: "🎭 리허설", type: "rehearsal" },
+                    { time: "15:30 - 18:00", title: "⭐️ 공연", type: "live" },
+                    { time: "18:00 ~", title: "🍱 공연 후 식사", type: "meal" }
+                ]
+            }
+        };
+
+        // 선택된 일자 렌더링 함수
+        function selectDay(dayKey) {
+            const data = scheduleData[dayKey];
+            
+            // 1. 헤더 및 중요경고 텍스트 교체
+            document.getElementById('dayTitle').innerText = data.title;
+            document.getElementById('daySubtitle').innerText = data.subtitle;
+            document.getElementById('alertText').innerHTML = data.alert;
+            document.getElementById('routeBadge').innerText = data.route;
+
+            // 2. 탭 하이라이트 제어
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "py-2.5 rounded-lg text-center font-bold text-xs transition duration-200 tab-btn text-slate-400 hover:text-white";
+            });
+            document.getElementById('tab-' + dayKey).className = "py-2.5 rounded-lg text-center font-bold text-xs transition duration-200 tab-btn bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
+
+            // 3. 타임라인 목록 빌드
+            const listContainer = document.getElementById('timelineList');
+            listContainer.innerHTML = '';
+
+            data.timeline.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "flex items-start gap-3 p-3 rounded-xl transition duration-150 border";
+                
+                // 타입별 스타일 적용 (시각적 분리)
+                let borderTheme = "border-slate-800 bg-slate-950/40";
+                let textTheme = "text-slate-300";
+                let badgeTheme = "bg-slate-800 text-slate-400";
+                
+                if (item.type === 'meal') {
+                    borderTheme = "border-emerald-500/20 bg-emerald-500/5";
+                    textTheme = "text-emerald-100";
+                    badgeTheme = "bg-emerald-500/20 text-emerald-400";
+                } else if (item.type === 'move') {
+                    borderTheme = "border-slate-800 bg-slate-950/30";
+                    textTheme = "text-slate-400";
+                    badgeTheme = "bg-slate-800 text-slate-400";
+                } else if (item.type === 'prep') {
+                    borderTheme = "border-amber-500/20 bg-amber-500/5";
+                    textTheme = "text-amber-100";
+                    badgeTheme = "bg-amber-500/20 text-amber-400";
+                } else if (item.type === 'rehearsal') {
+                    borderTheme = "border-indigo-500/20 bg-indigo-500/5";
+                    textTheme = "text-indigo-100";
+                    badgeTheme = "bg-indigo-500/20 text-indigo-400 font-bold";
+                } else if (item.type === 'live') {
+                    borderTheme = "border-rose-500/30 bg-rose-500/5";
+                    textTheme = "text-white font-semibold";
+                    badgeTheme = "bg-rose-500/20 text-rose-400 font-bold";
+                } else if (item.type === 'important') {
+                    borderTheme = "border-orange-500/30 bg-orange-500/5";
+                    textTheme = "text-orange-100";
+                    badgeTheme = "bg-orange-500/20 text-orange-400 font-bold";
+                } else if (item.type === 'tech') {
+                    borderTheme = "border-sky-500/20 bg-sky-500/5";
+                    textTheme = "text-sky-100";
+                    badgeTheme = "bg-sky-500/20 text-sky-400 font-bold";
+                }
+
+                row.className = `${borderTheme} ${row.className}`;
+
+                row.innerHTML = `
+                    <div class="flex-grow space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[11px] px-2 py-0.5 rounded font-bold ${badgeTheme}">${item.time}</span>
+                        </div>
+                        <h4 class="text-sm font-bold ${textTheme}">${item.title}</h4>
+                    </div>
+                `;
+                listContainer.appendChild(row);
+            });
+        }
+
+        // 초기 화면 구동 시 6일(월요일)을 가장 메인으로 로드
+        window.onload = function() {
+            selectDay('day6');
+        };
+    </script>
+</body>
+</html>
