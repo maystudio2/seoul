@@ -17,6 +17,8 @@
             font-family: 'Pretendard', sans-serif;
             background-color: #0b0f19;
             color: #f1f5f9;
+            word-break: keep-all; /* 한글 단어가 중간에 끊기지 않고 통째로 줄바꿈되도록 설정 */
+            overflow-wrap: break-word; /* 필요한 경우 줄바꿈 허용 */
         }
     </style>
 </head>
@@ -111,7 +113,7 @@
                 <!-- 11~12일 -->
                 <div onclick="selectDay('day11')" class="flex items-center justify-between p-2.5 bg-slate-950/40 hover:bg-slate-950/90 rounded-xl border border-slate-800/60 cursor-pointer transition">
                     <span class="text-xs font-bold text-amber-400">11-12일(토-일)</span>
-                    <span class="text-xs text-slate-300">☀️ 12시 리허설 (Call: 11시) ➡ 16시 본공연</span>
+                    <span class="text-xs text-slate-300">☀️ 12시 리허설 및 테크 (Call: 11시) ➡ 16시 본공연</span>
                 </div>
             </div>
         </div>
@@ -143,7 +145,8 @@
                     { time: "12:00 - 13:00", title: "⚡ 리허설 준비 (Call Time)", type: "prep" },
                     { time: "13:00 - 16:00", title: "🎭 1차 리허설", type: "rehearsal" },
                     { time: "16:00 - 16:10", title: "🚗 숙소 이동", type: "move" },
-                    { time: "16:00 - 16:50", title: "🍱 저녁 식사", type: "meal" },
+                    { time: "16:10 - 16:50", title: "🍱 저녁 식사", type: "meal" },
+                    { time: "16:50 - 17:00", title: "🚗 이동", type: "move" },
                     { time: "17:00 - 18:00", title: "⚡ 리허설 준비 (Call Time)", type: "prep" },
                     { time: "18:00 - 21:00", title: "🎭 2차 리허설", type: "rehearsal" }
                 ]
@@ -155,6 +158,7 @@
                 route: "리허설 ➡ 숙소(식사) ➡ 본공연(20시)",
                 timeline: [
                     { time: "11:00 - 12:00", title: "🍱 점심 식사", type: "meal" },
+                    { time: "12:00 - 12:50", title: "🧼 개인 정비", type: "prep" },
                     { time: "12:50 - 13:00", title: "🚗 이동", type: "move" },
                     { time: "13:00 - 14:00", title: "⚡ 리허설 준비 (Call Time)", type: "prep" },
                     { time: "14:00 - 16:00", title: "🎭 리허설", type: "rehearsal" },
@@ -169,10 +173,10 @@
                 title: "11일 토요일 ~ 12일 일요일",
                 subtitle: "주말 본 공연 타임테이블 (16시)",
                 alert: "주말은 이른 12시부터 리허설이 시작됩니다. 1시간 전인 11시까지 반드시 극장 도착 완료하셔야 합니다.",
-                route: "리허설 ➡ 본공연(16시) ➡ 종료식",
+                route: "리허설 및 테크 ➡ 본공연(16시) ➡ 종료식",
                 timeline: [
                     { time: "11:00 - 12:00", title: "⚡ 리허설 준비 (Call Time)", type: "prep" },
-                    { time: "12:00 - 15:30", title: "🎭 리허설", type: "rehearsal" },
+                    { time: "12:00 - 15:30", title: "🎭 리허설 및 테크", type: "rehearsal" },
                     { time: "15:30 - 18:00", title: "⭐️ 공연", type: "live" },
                     { time: "18:00 ~", title: "🍱 공연 후 식사", type: "meal" }
                 ]
